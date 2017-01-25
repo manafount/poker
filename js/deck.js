@@ -1,4 +1,5 @@
 import Card from './card';
+import createjs from 'createjs-easeljs';
 
 class Deck{
   constructor() {
@@ -14,11 +15,16 @@ class Deck{
   }
 
   getImages() {
-    if (this.faceUp) {
-      return `assets/${this.number}${this.suit[0]}.jpg`;
-    }else{
-      return `assets/back.jpg`;
-    }
+    let cardImages = [];
+    this.cards.forEach((card) => {
+      cardImages.push(card.getImage());
+    });
+    return cardImages;
+    // if (this.faceUp) {
+    //   return `assets/${this.number}${this.suit[0]}.jpg`;
+    // }else{
+    //   return `assets/back.jpg`;
+    // }
   }
 
   reset() {

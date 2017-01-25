@@ -62,19 +62,24 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	document.addEventListener('DOMContentLoaded', function () {
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 	
+	document.addEventListener('DOMContentLoaded', function () {
+	  var maxX = 800;
+	  var maxY = 600;
 	  var stage = new _createjsEaseljs2.default.Stage("canvas");
 	  // const newDeck = new deck(stage);
 	
 	  var deck = new _deck2.default();
-	  var testCard = new _card2.default(1, "spades");
-	  var cardImage = new _createjsEaseljs2.default.Bitmap(deck.cards[0].getImage());
-	  stage.addChild(cardImage);
 	  deck.reset();
 	  console.log(deck);
 	
-	  _createjsEaseljs2.default.Tween.get(cardImage, { loop: true }).to({ x: 400 }, 1000, _createjsEaseljs2.default.Ease.getPowInOut(4)).to({ alpha: 0, y: 175 }, 500, _createjsEaseljs2.default.Ease.getPowInOut(2)).to({ alpha: 0, y: 225 }, 100).to({ alpha: 1, y: 200 }, 500, _createjsEaseljs2.default.Ease.getPowInOut(2)).to({ x: 100 }, 800, _createjsEaseljs2.default.Ease.getPowInOut(2));
+	  var cardImages = deck.getImages();
+	  stage.addChild.apply(stage, _toConsumableArray(cardImages));
+	
+	  cardImages.forEach(function (card) {
+	    _createjsEaseljs2.default.Tween.get(card).to({ x: Math.random() * (maxX - 100), y: Math.random() * (maxY - 200) }, 1000).to({ x: Math.random() * (maxX - 100), y: Math.random() * (maxY - 200) }, 1000).to({ x: 0, y: 0 }, 1000);
+	  });
 	
 	  _createjsEaseljs2.default.Ticker.setFPS(60);
 	  _createjsEaseljs2.default.Ticker.addEventListener("tick", handleTick);
@@ -113,7 +118,7 @@
 /* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -124,6 +129,10 @@
 	var _card = __webpack_require__(3);
 	
 	var _card2 = _interopRequireDefault(_card);
+	
+	var _createjsEaseljs = __webpack_require__(1);
+	
+	var _createjsEaseljs2 = _interopRequireDefault(_createjsEaseljs);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -145,16 +154,21 @@
 	  }
 	
 	  _createClass(Deck, [{
-	    key: "getImages",
+	    key: 'getImages',
 	    value: function getImages() {
-	      if (this.faceUp) {
-	        return "assets/" + this.number + this.suit[0] + ".jpg";
-	      } else {
-	        return "assets/back.jpg";
-	      }
+	      var cardImages = [];
+	      this.cards.forEach(function (card) {
+	        cardImages.push(card.getImage());
+	      });
+	      return cardImages;
+	      // if (this.faceUp) {
+	      //   return `assets/${this.number}${this.suit[0]}.jpg`;
+	      // }else{
+	      //   return `assets/back.jpg`;
+	      // }
 	    }
 	  }, {
-	    key: "reset",
+	    key: 'reset',
 	    value: function reset() {
 	      this.cards.map(function (card) {
 	        if (card.faceUp) {
@@ -164,7 +178,7 @@
 	      this.cards = this.shuffle();
 	    }
 	  }, {
-	    key: "shuffle",
+	    key: 'shuffle',
 	    value: function shuffle() {
 	      var currentIndex = this.cards.length;
 	      var temporaryValue = void 0,
@@ -194,9 +208,9 @@
 
 /***/ },
 /* 3 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -204,33 +218,13 @@
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	var _createjsEaseljs = __webpack_require__(1);
 	
-	// var Card = function(number, suite) {
-	//     this.number = number;
-	//     this.suite  = suite;
-	//     this.faceUp = false;
-	//
-	//     this.initialize(Card.prototype.basePath + 'full_back.jpg');
-	// };
-	//
-	// Card.prototype = new createjs.Bitmap(); // inherit from Container
-	//
-	// Card.prototype.basePath = '';
-	//
-	// Card.prototype.getImagePath = function() {
-	//     return Card.prototype.basePath + this.number + this.suite[0] + '.jpg';
-	// };
-	//
-	// Card.prototype.setBasePath = function(basePath) {
-	//     this.basePath = basePath;
-	// };
-	//
-	// Card.prototype.flip = function() {
-	//     //this.image.src = this.getImagePath();
-	//     this.image = resources.get(this.getImagePath());
-	//     this.faceUp = true;
-	// };
+	var _createjsEaseljs2 = _interopRequireDefault(_createjsEaseljs);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
 	var Card = function () {
 	  function Card(number, suit) {
@@ -242,16 +236,18 @@
 	  }
 	
 	  _createClass(Card, [{
-	    key: "getImage",
+	    key: 'getImage',
 	    value: function getImage() {
 	      if (this.faceUp) {
-	        return "assets/" + this.number + this.suit[0] + ".jpg";
+	        var cardImage = new _createjsEaseljs2.default.Bitmap('assets/' + this.number + this.suit[0] + '.jpg');
+	        return cardImage;
 	      } else {
-	        return "assets/back.jpg";
+	        var _cardImage = new _createjsEaseljs2.default.Bitmap('assets/back.jpg');
+	        return _cardImage;
 	      }
 	    }
 	  }, {
-	    key: "flip",
+	    key: 'flip',
 	    value: function flip() {
 	      this.faceUp = !this.faceUp;
 	    }
