@@ -1,0 +1,34 @@
+{
+  "name": "poker",
+  "version": "1.0.0",
+  "description": "### Background",
+  "main": "./js/poker.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/manafount/poker.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/manafount/poker/issues"
+  },
+  "homepage": "https://github.com/manafount/poker#readme",
+  "dependencies": {
+    "babel-core": "^6.22.1",
+    "babel-loader": "^6.2.10",
+    "babel-preset-es2015": "^6.22.0",
+    "createjs-easeljs": "^0.8.2",
+    "createjs-tweenjs": "^0.6.0",
+    "webpack": "^1.14.0"
+  },
+  "devDependencies": {
+    "createjs-easeljs": "0.8.2",
+    "createjs-tweenjs": "^0.6.0",
+    "exports-loader": "^0.6.3",
+    "imports-loader": "^0.7.0"
+  }
+}
