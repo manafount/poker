@@ -5,16 +5,22 @@ class Card {
     this.number = number;
     this.suit = suit;
     this.faceUp = false;
+    this.name = `${number}${suit[0]}`;
+    this.cardImage = new createjs.Bitmap(`assets/back.jpg`);
   }
 
   getImage() {
     if (this.faceUp) {
-      let cardImage = new createjs.Bitmap(`assets/${this.number}${this.suit[0]}.jpg`);
-      return cardImage;
+      this.cardImage.image = document.createElement("img");
+			this.cardImage.image.src = `assets/${this.number}${this.suit[0]}.jpg`;
     }else{
-      let cardImage = new createjs.Bitmap(`assets/back.jpg`);
-      return cardImage;
+      this.cardImage.image = document.createElement("img");
+			this.cardImage.image.src = `assets/back.jpg`;
     }
+    this.cardImage.x = 300;
+    this.cardImage.y = 100;
+    this.cardImage.name = this.name;
+    return this.cardImage;
   }
 
   flip() {

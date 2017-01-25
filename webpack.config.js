@@ -1,6 +1,6 @@
 
 module.exports = {
-  entry: './js/poker.js',
+  entry: './js/index.js',
   output: {
     path: './js/',
     filename: 'bundle.js',

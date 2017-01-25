@@ -50,36 +50,27 @@
 	
 	var _createjsEaseljs2 = _interopRequireDefault(_createjsEaseljs);
 	
-	var _createjsTweenjs = __webpack_require__(4);
+	var _createjsTweenjs = __webpack_require__(2);
 	
-	var _card = __webpack_require__(3);
+	var _poker = __webpack_require__(6);
 	
-	var _card2 = _interopRequireDefault(_card);
+	var _poker2 = _interopRequireDefault(_poker);
 	
-	var _deck = __webpack_require__(2);
+	var _deck = __webpack_require__(3);
 	
 	var _deck2 = _interopRequireDefault(_deck);
 	
+	var _hand = __webpack_require__(5);
+	
+	var _hand2 = _interopRequireDefault(_hand);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-	
 	document.addEventListener('DOMContentLoaded', function () {
-	  var maxX = 800;
-	  var maxY = 600;
 	  var stage = new _createjsEaseljs2.default.Stage("canvas");
-	  // const newDeck = new deck(stage);
-	
-	  var deck = new _deck2.default();
-	  deck.reset();
-	  console.log(deck);
-	
-	  var cardImages = deck.getImages();
-	  stage.addChild.apply(stage, _toConsumableArray(cardImages));
-	
-	  cardImages.forEach(function (card) {
-	    _createjsEaseljs2.default.Tween.get(card).to({ x: Math.random() * (maxX - 100), y: Math.random() * (maxY - 200) }, 1000).to({ x: Math.random() * (maxX - 100), y: Math.random() * (maxY - 200) }, 1000).to({ x: 0, y: 0 }, 1000);
-	  });
+	  var newPokerGame = new _poker2.default(stage);
+	  newPokerGame.shuffleDeck();
+	  // newPokerGame.deal();
 	
 	  _createjsEaseljs2.default.Ticker.setFPS(60);
 	  _createjsEaseljs2.default.Ticker.addEventListener("tick", handleTick);
@@ -116,152 +107,11 @@
 
 /***/ },
 /* 2 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	var _card = __webpack_require__(3);
-	
-	var _card2 = _interopRequireDefault(_card);
-	
-	var _createjsEaseljs = __webpack_require__(1);
-	
-	var _createjsEaseljs2 = _interopRequireDefault(_createjsEaseljs);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	var Deck = function () {
-	  function Deck() {
-	    _classCallCheck(this, Deck);
-	
-	    var suits = ["diamonds", "hearts", "spades", "clubs"];
-	    this.cards = [];
-	    for (var suit = 0; suit < 4; suit++) {
-	      for (var i = 1; i <= 13; i++) {
-	        var card = new _card2.default(i, suits[suit]);
-	        this.cards.push(card);
-	      }
-	    }
-	    this.shuffle();
-	  }
-	
-	  _createClass(Deck, [{
-	    key: 'getImages',
-	    value: function getImages() {
-	      var cardImages = [];
-	      this.cards.forEach(function (card) {
-	        cardImages.push(card.getImage());
-	      });
-	      return cardImages;
-	      // if (this.faceUp) {
-	      //   return `assets/${this.number}${this.suit[0]}.jpg`;
-	      // }else{
-	      //   return `assets/back.jpg`;
-	      // }
-	    }
-	  }, {
-	    key: 'reset',
-	    value: function reset() {
-	      this.cards.map(function (card) {
-	        if (card.faceUp) {
-	          card.flip();
-	        }
-	      });
-	      this.cards = this.shuffle();
-	    }
-	  }, {
-	    key: 'shuffle',
-	    value: function shuffle() {
-	      var currentIndex = this.cards.length;
-	      var temporaryValue = void 0,
-	          randomIndex = void 0;
-	
-	      // While there remain elements to shuffle...
-	      while (0 !== currentIndex) {
-	
-	        // Pick a remaining element...
-	        randomIndex = Math.floor(Math.random() * currentIndex);
-	        currentIndex -= 1;
-	
-	        // And swap it with the current element.
-	        temporaryValue = this.cards[currentIndex];
-	        this.cards[currentIndex] = this.cards[randomIndex];
-	        this.cards[randomIndex] = temporaryValue;
-	      }
-	
-	      return this.cards;
-	    }
-	  }]);
-	
-	  return Deck;
-	}();
-	
-	exports.default = Deck;
-
-/***/ },
-/* 3 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	var _createjsEaseljs = __webpack_require__(1);
-	
-	var _createjsEaseljs2 = _interopRequireDefault(_createjsEaseljs);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	var Card = function () {
-	  function Card(number, suit) {
-	    _classCallCheck(this, Card);
-	
-	    this.number = number;
-	    this.suit = suit;
-	    this.faceUp = false;
-	  }
-	
-	  _createClass(Card, [{
-	    key: 'getImage',
-	    value: function getImage() {
-	      if (this.faceUp) {
-	        var cardImage = new _createjsEaseljs2.default.Bitmap('assets/' + this.number + this.suit[0] + '.jpg');
-	        return cardImage;
-	      } else {
-	        var _cardImage = new _createjsEaseljs2.default.Bitmap('assets/back.jpg');
-	        return _cardImage;
-	      }
-	    }
-	  }, {
-	    key: 'flip',
-	    value: function flip() {
-	      this.faceUp = !this.faceUp;
-	    }
-	  }]);
-	
-	  return Card;
-	}();
-	
-	exports.default = Card;
-
-/***/ },
-/* 4 */
 /***/ function(module, exports) {
 
+	/*** IMPORTS FROM imports-loader ***/
+	(function() {
+	
 	/*!
 	* TweenJS
 	* Visit http://createjs.com/ for documentation, updates and examples.
@@ -3493,6 +3343,299 @@
 		s.buildDate = /*=date*/"Thu, 11 Dec 2014 23:32:09 GMT"; // injected by build process
 	
 	})();
+	
+	/*** EXPORTS FROM exports-loader ***/
+	module.exports = window.createjs;
+	}.call(window));
+
+/***/ },
+/* 3 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _card = __webpack_require__(4);
+	
+	var _card2 = _interopRequireDefault(_card);
+	
+	var _createjsEaseljs = __webpack_require__(1);
+	
+	var _createjsEaseljs2 = _interopRequireDefault(_createjsEaseljs);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var Deck = function () {
+	  function Deck(stage) {
+	    _classCallCheck(this, Deck);
+	
+	    var suits = ["diamonds", "hearts", "spades", "clubs"];
+	    this.stage = stage;
+	    this.cards = [];
+	    for (var suit = 0; suit < 4; suit++) {
+	      for (var i = 1; i <= 13; i++) {
+	        var card = new _card2.default(i, suits[suit]);
+	        this.cards.push(card);
+	      }
+	    }
+	    this.shuffle();
+	  }
+	
+	  _createClass(Deck, [{
+	    key: 'getImages',
+	    value: function getImages() {
+	      var cardImages = [];
+	      this.cards.forEach(function (card) {
+	        cardImages.push(card.getImage());
+	      });
+	      return cardImages;
+	    }
+	  }, {
+	    key: 'reset',
+	    value: function reset() {
+	      this.cards.map(function (card) {
+	        if (card.faceUp) {
+	          card.flip();
+	        }
+	      });
+	      this.cards = this.shuffle();
+	    }
+	  }, {
+	    key: 'draw',
+	    value: function draw() {
+	      var num = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
+	
+	      var result = [];
+	      for (var i = 0; i < num; i++) {
+	        result.push(this.cards.pop());
+	      }
+	      return result;
+	    }
+	  }, {
+	    key: 'shuffle',
+	    value: function shuffle() {
+	      //Fisher-Yates shuffle
+	      var currentIndex = this.cards.length;
+	      var temporaryValue = void 0,
+	          randomIndex = void 0;
+	      while (0 !== currentIndex) {
+	        randomIndex = Math.floor(Math.random() * currentIndex);
+	        currentIndex -= 1;
+	        temporaryValue = this.cards[currentIndex];
+	        this.cards[currentIndex] = this.cards[randomIndex];
+	        this.cards[randomIndex] = temporaryValue;
+	      }
+	      return this.cards;
+	    }
+	  }]);
+	
+	  return Deck;
+	}();
+	
+	exports.default = Deck;
+
+/***/ },
+/* 4 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _createjsEaseljs = __webpack_require__(1);
+	
+	var _createjsEaseljs2 = _interopRequireDefault(_createjsEaseljs);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var Card = function () {
+	  function Card(number, suit) {
+	    _classCallCheck(this, Card);
+	
+	    this.number = number;
+	    this.suit = suit;
+	    this.faceUp = false;
+	    this.name = "" + number + suit[0];
+	    this.cardImage = new _createjsEaseljs2.default.Bitmap("assets/back.jpg");
+	  }
+	
+	  _createClass(Card, [{
+	    key: "getImage",
+	    value: function getImage() {
+	      if (this.faceUp) {
+	        this.cardImage.image = document.createElement("img");
+	        this.cardImage.image.src = "assets/" + this.number + this.suit[0] + ".jpg";
+	      } else {
+	        this.cardImage.image = document.createElement("img");
+	        this.cardImage.image.src = "assets/back.jpg";
+	      }
+	      this.cardImage.x = 300;
+	      this.cardImage.y = 100;
+	      this.cardImage.name = this.name;
+	      return this.cardImage;
+	    }
+	  }, {
+	    key: "flip",
+	    value: function flip() {
+	      this.faceUp = !this.faceUp;
+	    }
+	  }]);
+	
+	  return Card;
+	}();
+	
+	exports.default = Card;
+
+/***/ },
+/* 5 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _card = __webpack_require__(4);
+	
+	var _card2 = _interopRequireDefault(_card);
+	
+	var _deck = __webpack_require__(3);
+	
+	var _deck2 = _interopRequireDefault(_deck);
+	
+	var _createjsEaseljs = __webpack_require__(1);
+	
+	var _createjsEaseljs2 = _interopRequireDefault(_createjsEaseljs);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var Hand = function () {
+	  function Hand(deck, stage) {
+	    _classCallCheck(this, Hand);
+	
+	    this.trayPositions = [[0, 300], [150, 300], [300, 300], [450, 300], [600, 300]];
+	    this.hand = [null, null, null, null, null];
+	    this.deck = deck;
+	    this.stage = stage;
+	  }
+	
+	  _createClass(Hand, [{
+	    key: 'getNewHand',
+	    value: function getNewHand() {
+	      this.hand = this.deck.draw(5);
+	      console.log(this.hand);
+	      this.animateDraw(this.hand);
+	    }
+	  }, {
+	    key: 'animateDraw',
+	    value: function animateDraw(cards) {
+	      var _this = this;
+	
+	      var cardImages = [];
+	      cards.forEach(function (card) {
+	        var cardImage = _this.stage.getChildByName(card.name);
+	        cardImages.push(cardImage);
+	      });
+	      cardImages.forEach(function (card, index) {
+	        _createjsEaseljs2.default.Tween.get(card).to({
+	          x: _this.trayPositions[index][0],
+	          y: _this.trayPositions[index][1]
+	        }, 1000);
+	      });
+	    }
+	  }]);
+	
+	  return Hand;
+	}();
+	
+	exports.default = Hand;
+
+/***/ },
+/* 6 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _createjsEaseljs = __webpack_require__(1);
+	
+	var _createjsEaseljs2 = _interopRequireDefault(_createjsEaseljs);
+	
+	var _createjsTweenjs = __webpack_require__(2);
+	
+	var _deck = __webpack_require__(3);
+	
+	var _deck2 = _interopRequireDefault(_deck);
+	
+	var _hand = __webpack_require__(5);
+	
+	var _hand2 = _interopRequireDefault(_hand);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var Poker = function () {
+	  function Poker(stage) {
+	    var _stage;
+	
+	    _classCallCheck(this, Poker);
+	
+	    this.maxX = 800;
+	    this.maxY = 600;
+	    this.stage = stage;
+	    this.deck = new _deck2.default(this.stage);
+	    this.hand = new _hand2.default(this.deck, this.stage);
+	
+	    this.cardImages = this.deck.getImages();
+	    (_stage = this.stage).addChild.apply(_stage, _toConsumableArray(this.cardImages));
+	  }
+	
+	  _createClass(Poker, [{
+	    key: 'play',
+	    value: function play() {}
+	  }, {
+	    key: 'shuffleDeck',
+	    value: function shuffleDeck() {
+	      var _this = this;
+	
+	      this.cardImages.forEach(function (card) {
+	        _createjsEaseljs2.default.Tween.get(card).to({ x: Math.random() * (_this.maxX - 100),
+	          y: Math.random() * (_this.maxY - 200) }, 1000).to({ x: Math.random() * (_this.maxX - 100),
+	          y: Math.random() * (_this.maxY - 200) }, 1000).to({ x: 300, y: 100 }, 1000);
+	      });
+	    }
+	  }]);
+	
+	  return Poker;
+	}();
+	
+	exports.default = Poker;
 
 /***/ }
 /******/ ]);

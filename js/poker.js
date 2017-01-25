@@ -1,32 +1,35 @@
 import createjs from 'createjs-easeljs';
 import { Tween, Ease } from 'createjs-tweenjs';
 
-import Card from './card';
 import Deck from './deck';
+import Hand from './hand';
 
-document.addEventListener('DOMContentLoaded', () => {
-  const maxX = 800;
-  const maxY = 600;
-  const stage = new createjs.Stage("canvas");
-  // const newDeck = new deck(stage);
+class Poker {
+  constructor(stage) {
+    this.maxX = 800;
+    this.maxY = 600;
+    this.stage = stage;
+    this.deck = new Deck(this.stage);
+    this.hand = new Hand(this.deck, this.stage);
 
-  let deck = new Deck();
-  deck.reset();
-  console.log(deck);
-
-  let cardImages = deck.getImages();
-  stage.addChild(...cardImages);
-
-  cardImages.forEach((card) => {
-    createjs.Tween.get(card)
-      .to({ x: (Math.random() * (maxX - 100)), y: (Math.random() * (maxY - 200)) }, 1000)
-      .to({ x: (Math.random() * (maxX - 100)), y: (Math.random() * (maxY - 200)) }, 1000)
-      .to({ x: 0, y: 0 }, 1000);
-  });
-
-  createjs.Ticker.setFPS(60);
-  createjs.Ticker.addEventListener("tick", handleTick);
-  function handleTick(event) {
-    stage.update();
+    this.cardImages = this.deck.getImages();
+    this.stage.addChild(...this.cardImages);
   }
-});
+
+  play() {
+
+  }
+
+  shuffleDeck() {
+    this.cardImages.forEach((card) => {
+      createjs.Tween.get(card)
+        .to({ x: (Math.random() * (this.maxX - 100)),
+              y: (Math.random() * (this.maxY - 200)) }, 1000)
+        .to({ x: (Math.random() * (this.maxX - 100)),
+              y: (Math.random() * (this.maxY - 200)) }, 1000)
+        .to({ x: 300, y: 100 }, 1000);
+    });
+  }
+}
+
+export default Poker;
