@@ -13,6 +13,7 @@ class Hand {
       [650, 300]
     ];
     this.hand = [null, null, null, null, null];
+    this.selectedCards = [];
     this.deck = deck;
     this.stage = stage;
     this.getNewHand = this.getNewHand.bind(this);
@@ -26,10 +27,25 @@ class Hand {
   }
 
   handleClick(event) {
-    console.log(event.currentTarget);
-    this.hand.find((el) => {
-      return el.name === event.currentTarget.name;
-    }).toggleSelected();
+    let drawButton = document.getElementById("draw-button");
+    let cardImage = event.currentTarget;
+    let clickedCard = this.hand.find((card) => {
+      return card.name === cardImage.name;
+    });
+    clickedCard.toggleSelected();
+    if (clickedCard.selected) {
+      this.selectedCards.push(clickedCard);
+    }else{
+      let index = this.selectedCards.indexOf(clickedCard);
+      this.selectedCards.splice(index, 1);
+    }
+    if (this.selectedCards.length > 0){
+      drawButton.innerHTML = `Draw ${this.selectedCards.length}`;
+      drawButton.disabled = false;
+    }else{
+      drawButton.innerHTML = "Draw";
+      drawButton.disabled = true;
+    }
   }
 
   animateDraw(cards) {

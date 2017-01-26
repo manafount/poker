@@ -3661,6 +3661,7 @@
 	
 	    this.trayPositions = [[50, 300], [200, 300], [350, 300], [500, 300], [650, 300]];
 	    this.hand = [null, null, null, null, null];
+	    this.selectedCards = [];
 	    this.deck = deck;
 	    this.stage = stage;
 	    this.getNewHand = this.getNewHand.bind(this);
@@ -3677,10 +3678,25 @@
 	  }, {
 	    key: 'handleClick',
 	    value: function handleClick(event) {
-	      console.log(event.currentTarget);
-	      this.hand.find(function (el) {
-	        return el.name === event.currentTarget.name;
-	      }).toggleSelected();
+	      var drawButton = document.getElementById("draw-button");
+	      var cardImage = event.currentTarget;
+	      var clickedCard = this.hand.find(function (card) {
+	        return card.name === cardImage.name;
+	      });
+	      clickedCard.toggleSelected();
+	      if (clickedCard.selected) {
+	        this.selectedCards.push(clickedCard);
+	      } else {
+	        var index = this.selectedCards.indexOf(clickedCard);
+	        this.selectedCards.splice(index, 1);
+	      }
+	      if (this.selectedCards.length > 0) {
+	        drawButton.innerHTML = 'Draw ' + this.selectedCards.length;
+	        drawButton.disabled = false;
+	      } else {
+	        drawButton.innerHTML = "Draw";
+	        drawButton.disabled = true;
+	      }
 	    }
 	  }, {
 	    key: 'animateDraw',
