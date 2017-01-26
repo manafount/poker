@@ -12,14 +12,27 @@ class Poker {
     this.deck = new Deck(this.stage);
     this.hand = new Hand(this.deck, this.stage);
     this.active = 0;
+    this.gameState = "Game Over";
 
     this.cardImages = this.deck.getImages();
     this.stage.addChild(...this.cardImages);
+    this.handleDrawButton = this.handleDrawButton.bind(this);
     this.shuffleComplete = this.shuffleComplete.bind(this);
   }
 
   play() {
 
+  }
+
+  handleDealButton(dealButton) {
+    console.log(this.gameState);
+    if (this.gameState === "Game Over") {
+      dealButton.disabled = true;
+      this.shuffleDeck();
+    }
+  }
+
+  handleDrawButton(drawButton) {
   }
 
   shuffleDeck() {

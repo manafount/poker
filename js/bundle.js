@@ -67,10 +67,18 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	document.addEventListener('DOMContentLoaded', function () {
+	  var drawButton = document.getElementById("draw-button");
+	  var dealButton = document.getElementById("deal-button");
 	  var stage = new _createjsEaseljs2.default.Stage("canvas");
-	  var newPokerGame = new _poker2.default(stage);
-	  newPokerGame.shuffleDeck();
-	  // newPokerGame.deal();
+	  var game = new _poker2.default(stage);
+	
+	  drawButton.disabled = true;
+	  drawButton.addEventListener("click", function () {
+	    return game.handleDrawButton(drawButton);
+	  });
+	  dealButton.addEventListener("click", function () {
+	    return game.handleDealButton(dealButton);
+	  });
 	
 	  _createjsEaseljs2.default.Ticker.setFPS(60);
 	  _createjsEaseljs2.default.Ticker.addEventListener("tick", handleTick);
@@ -3392,15 +3400,29 @@
 	    this.deck = new _deck2.default(this.stage);
 	    this.hand = new _hand2.default(this.deck, this.stage);
 	    this.active = 0;
+	    this.gameState = "Game Over";
 	
 	    this.cardImages = this.deck.getImages();
 	    (_stage = this.stage).addChild.apply(_stage, _toConsumableArray(this.cardImages));
+	    this.handleDrawButton = this.handleDrawButton.bind(this);
 	    this.shuffleComplete = this.shuffleComplete.bind(this);
 	  }
 	
 	  _createClass(Poker, [{
 	    key: 'play',
 	    value: function play() {}
+	  }, {
+	    key: 'handleDealButton',
+	    value: function handleDealButton(dealButton) {
+	      console.log(this.gameState);
+	      if (this.gameState === "Game Over") {
+	        dealButton.disabled = true;
+	        this.shuffleDeck();
+	      }
+	    }
+	  }, {
+	    key: 'handleDrawButton',
+	    value: function handleDrawButton(drawButton) {}
 	  }, {
 	    key: 'shuffleDeck',
 	    value: function shuffleDeck() {
