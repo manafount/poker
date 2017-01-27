@@ -19,11 +19,11 @@ class Hand {
     this.getNewHand = this.getNewHand.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.animateDraw = this.animateDraw.bind(this);
+    this.resetHandState = this.resetHandState.bind(this);
   }
 
   getNewHand() {
     this.hand = this.deck.draw(5);
-    console.log(this.hand);
     this.animateDraw(this.hand);
   }
 
@@ -34,7 +34,9 @@ class Hand {
       let cardImage = this.stage.getChildByName(card.name);
       cardImages.push(cardImage);
       emptyPositions.push([cardImage.x, cardImage.y]);
+      this.deck.cards.push(card);
     });
+
     // return the discarded cards to the bottom of the deck
     cardImages.forEach((cardImage, index) => {
       createjs.Tween.get(cardImage)
@@ -54,9 +56,24 @@ class Hand {
 
     // draw new cards from the deck and add them to the hand
     let newCards = this.deck.draw(emptyPositions.length);
+    this.hand = this.hand.concat(newCards);
     setTimeout(() => this.animateDraw(newCards, emptyPositions), 1200);
-    console.log(newCards);
-    console.log(emptyPositions);
+    setTimeout(this.resetHandState, 1200);
+  }
+
+  resetHandState() {
+    this.selectedCards = [];
+    let dealButton = document.getElementById("deal-button");
+    let drawButton = document.getElementById("draw-button");
+    drawButton.innerHTML = "Draw";
+    drawButton.disabled = true;
+    dealButton.disabled = false;
+
+    this.hand.forEach((card) => {
+      this.deck.cards.push(card);
+      this.stage.getChildByName(card.name)
+        .removeEventListener("click", this.handleClick);
+    });
   }
 
   handleClick(event) {

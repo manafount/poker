@@ -3417,6 +3417,7 @@
 	      if (this.gameState === "Game Over") {
 	        this.gameState = "Drawing";
 	        dealButton.disabled = true;
+	        this.deck.reset();
 	        this.shuffleDeck();
 	      }
 	    }
@@ -3508,7 +3509,7 @@
 	  }, {
 	    key: 'reset',
 	    value: function reset() {
-	      this.cards.map(function (card) {
+	      this.cards.forEach(function (card) {
 	        if (card.faceUp) {
 	          card.flip();
 	        }
@@ -3672,13 +3673,13 @@
 	    this.getNewHand = this.getNewHand.bind(this);
 	    this.handleClick = this.handleClick.bind(this);
 	    this.animateDraw = this.animateDraw.bind(this);
+	    this.resetHandState = this.resetHandState.bind(this);
 	  }
 	
 	  _createClass(Hand, [{
 	    key: 'getNewHand',
 	    value: function getNewHand() {
 	      this.hand = this.deck.draw(5);
-	      console.log(this.hand);
 	      this.animateDraw(this.hand);
 	    }
 	  }, {
@@ -3692,7 +3693,9 @@
 	        var cardImage = _this.stage.getChildByName(card.name);
 	        cardImages.push(cardImage);
 	        emptyPositions.push([cardImage.x, cardImage.y]);
+	        _this.deck.cards.push(card);
 	      });
+	
 	      // return the discarded cards to the bottom of the deck
 	      cardImages.forEach(function (cardImage, index) {
 	        _createjsEaseljs2.default.Tween.get(cardImage).wait(index * 200).to({
@@ -3708,11 +3711,28 @@
 	
 	      // draw new cards from the deck and add them to the hand
 	      var newCards = this.deck.draw(emptyPositions.length);
+	      this.hand = this.hand.concat(newCards);
 	      setTimeout(function () {
 	        return _this.animateDraw(newCards, emptyPositions);
 	      }, 1200);
-	      console.log(newCards);
-	      console.log(emptyPositions);
+	      setTimeout(this.resetHandState, 1200);
+	    }
+	  }, {
+	    key: 'resetHandState',
+	    value: function resetHandState() {
+	      var _this2 = this;
+	
+	      this.selectedCards = [];
+	      var dealButton = document.getElementById("deal-button");
+	      var drawButton = document.getElementById("draw-button");
+	      drawButton.innerHTML = "Draw";
+	      drawButton.disabled = true;
+	      dealButton.disabled = false;
+	
+	      this.hand.forEach(function (card) {
+	        _this2.deck.cards.push(card);
+	        _this2.stage.getChildByName(card.name).removeEventListener("click", _this2.handleClick);
+	      });
 	    }
 	  }, {
 	    key: 'handleClick',
@@ -3740,13 +3760,13 @@
 	  }, {
 	    key: 'animateDraw',
 	    value: function animateDraw(cards) {
-	      var _this2 = this;
+	      var _this3 = this;
 	
 	      var positions = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.trayPositions;
 	
 	      var cardImages = [];
 	      cards.forEach(function (card) {
-	        var cardImage = _this2.stage.getChildByName(card.name);
+	        var cardImage = _this3.stage.getChildByName(card.name);
 	        cardImages.push(cardImage);
 	      });
 	      cardImages.forEach(function (cardImage, index) {
@@ -3755,7 +3775,7 @@
 	          y: positions[index][1],
 	          scaleX: 0
 	        }, 700).call(cards[index].flip).to({ scaleX: 1 }, 200);
-	        cardImage.addEventListener("click", _this2.handleClick);
+	        cardImage.addEventListener("click", _this3.handleClick);
 	      });
 	    }
 	  }]);

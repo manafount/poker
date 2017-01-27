@@ -28,6 +28,7 @@ class Poker {
     if (this.gameState === "Game Over") {
       this.gameState = "Drawing";
       dealButton.disabled = true;
+      this.deck.reset();
       this.shuffleDeck();
     }
   }

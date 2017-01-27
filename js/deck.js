@@ -24,7 +24,7 @@ class Deck{
   }
 
   reset() {
-    this.cards.map((card) => {
+    this.cards.forEach((card) => {
       if (card.faceUp) {
         card.flip();
       }
