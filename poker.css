@@ -21,6 +21,17 @@ h1 {
   color: white;
 }
 
+a {
+  font-size: 3em;
+  font-family: 'Comfortaa';
+  color: white;
+  text-decoration: none;
+}
+
+#linkedin {
+  font-size: 3em;
+}
+
 #game-container {
   width: 80%;
   min-width: 900px;
@@ -49,6 +60,13 @@ h1 {
   position: absolute;
   top: 20px;
   left: 20px;
+  color: white;
+}
+
+#links {
+  position: absolute;
+  top: 20px;
+  right: 20px;
   color: white;
 }
 
