@@ -26,7 +26,7 @@ body {
   align-items: center;
   justify-content: center;
   position: relative;
-  border: 10px solid white;
+  border: 5px solid white;
 }
 
 #canvas {
