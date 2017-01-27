@@ -17,6 +17,10 @@ body {
   background-image: url('assets/casino_background.jpg');
 }
 
+h1 {
+  color: white;
+}
+
 #game-container {
   width: 80%;
   min-width: 900px;
@@ -27,6 +31,7 @@ body {
   justify-content: center;
   position: relative;
   border: 5px solid white;
+  background-color:rgba(0, 0, 0, 0.3);
 }
 
 #canvas {
@@ -45,7 +50,6 @@ body {
   top: 20px;
   left: 20px;
   color: white;
-  background-color:rgba(0, 0, 0, 0.3);
 }
 
 .score-helper > *{
