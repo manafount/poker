@@ -3388,6 +3388,30 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
+	var scoreMultipliers = {
+	  "sf": 500,
+	  "4": 200,
+	  "fh": 50,
+	  "flush": 20,
+	  "straight": 10,
+	  "3": 5,
+	  "2p": 3,
+	  "1p": 0,
+	  "0p": 0
+	};
+	
+	var resultMessage = {
+	  "sf": "Straight Flush!",
+	  "4": "Four of a Kind!",
+	  "fh": "Full House!",
+	  "flush": "Flush!",
+	  "straight": "Straight!",
+	  "3": "Three of a Kind!",
+	  "2p": "Two Pair!",
+	  "1p": "One Pair!",
+	  "0p": "No Pairs"
+	};
+	
 	var Poker = function () {
 	  function Poker(stage) {
 	    var _stage;
@@ -3404,18 +3428,6 @@
 	    this.score = 100;
 	    this.currentBet = 10;
 	
-	    this.scoreMultipliers = {
-	      "sf": 500,
-	      "4": 200,
-	      "fh": 50,
-	      "flush": 20,
-	      "straight": 10,
-	      "3": 5,
-	      "2p": 3,
-	      "1p": 0,
-	      "0p": 0
-	    };
-	
 	    this.drawPokerLogo();
 	    this.cardImages = this.deck.getImages();
 	    (_stage = this.stage).addChild.apply(_stage, _toConsumableArray(this.cardImages));
@@ -3425,12 +3437,7 @@
 	
 	  _createClass(Poker, [{
 	    key: 'drawPokerLogo',
-	    value: function drawPokerLogo() {
-	      var pokerText = new _createjsEaseljs2.default.Text("Poker!", "40px Comfortaa", "white");
-	      pokerText.x = 335;
-	      pokerText.y = 30;
-	      this.stage.addChild(pokerText);
-	    }
+	    value: function drawPokerLogo() {}
 	  }, {
 	    key: 'drawScoreHelper',
 	    value: function drawScoreHelper() {
@@ -3440,7 +3447,20 @@
 	    }
 	  }, {
 	    key: 'drawResult',
-	    value: function drawResult(result) {}
+	    value: function drawResult(result) {
+	      var _this = this;
+	
+	      var resultText = new _createjsEaseljs2.default.Text(resultMessage[result], "40px Comfortaa", "white");
+	      resultText.x = 400;
+	      resultText.y = 30;
+	      resultText.textAlign = "center";
+	      setTimeout(function () {
+	        _this.stage.addChild(resultText);
+	        _createjsEaseljs2.default.Tween.get(resultText).wait(200).to({ alpha: 0 }, 2000).call(function () {
+	          return _this.stage.removeChild(resultText);
+	        });
+	      }, 500);
+	    }
 	  }, {
 	    key: 'handleDealButton',
 	    value: function handleDealButton(dealButton) {
@@ -3466,22 +3486,20 @@
 	        this.gameState = "Game Over";
 	        var result = this.hand.getHandRank();
 	        this.drawResult(result);
-	        console.log(this.scoreMultipliers);
-	        console.log(result);
-	        this.score += this.currentBet * this.scoreMultipliers[result];
+	        this.score += this.currentBet * scoreMultipliers[result];
 	        this.updateScore();
 	      }
 	    }
 	  }, {
 	    key: 'shuffleDeck',
 	    value: function shuffleDeck() {
-	      var _this = this;
+	      var _this2 = this;
 	
 	      this.active = this.cardImages.length;
 	      this.cardImages.forEach(function (card) {
-	        _createjsEaseljs2.default.Tween.get(card).to({ x: Math.random() * (_this.maxX - 100),
-	          y: Math.random() * (_this.maxY - 200) }, 700).to({ x: Math.random() * (_this.maxX - 100),
-	          y: Math.random() * (_this.maxY - 200) }, 700).to({ x: 350, y: 100 }, 700).call(_this.shuffleComplete);
+	        _createjsEaseljs2.default.Tween.get(card).to({ x: Math.random() * (_this2.maxX - 100),
+	          y: Math.random() * (_this2.maxY - 200) }, 700).to({ x: Math.random() * (_this2.maxX - 100),
+	          y: Math.random() * (_this2.maxY - 200) }, 700).to({ x: 350, y: 100 }, 700).call(_this2.shuffleComplete);
 	      });
 	    }
 	  }, {

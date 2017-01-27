@@ -16,11 +16,24 @@ body {
   justify-content: center;
   background-image: url('assets/casino_background.jpg');
 }
+
+#game-container {
+  width: 80%;
+  min-width: 900px;
+  height: 600px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  border: 10px solid white;
+}
+
 #canvas {
 }
 
 .score {
-  width: 300px;
+  width: 350px;
   display: flex;
   justify-content: space-around;
   color: white;
@@ -29,17 +42,22 @@ body {
 
 .score-helper {
   position: absolute;
+  top: 20px;
+  left: 20px;
   color: white;
   background-color:rgba(0, 0, 0, 0.3);
 }
 
-.score-helper p {
-  font-size: .8em;
+.score-helper > *{
   margin: 5px;
 }
 
+.score-helper p {
+  font-size: .8em;
+}
+
 .button-row {
-  width: 300px;
+  width: 350px;
   display: flex;
   justify-content: space-around;
 }
