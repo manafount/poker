@@ -3,6 +3,10 @@ html {
   width: 100%;
 }
 
+html * {
+  font-family: 'Comfortaa', cursive;
+}
+
 body {
   height: 100%;
   width: 100%;
@@ -13,5 +17,29 @@ body {
   background-image: url('assets/casino_background.jpg');
 }
 #canvas {
+}
 
+.score {
+  width: 300px;
+  display: flex;
+  justify-content: space-around;
+  color: white;
+  font-weight: bold;
+}
+
+.score-helper {
+  position: absolute;
+  color: white;
+  background-color:rgba(0, 0, 0, 0.3);
+}
+
+.score-helper p {
+  font-size: .8em;
+  margin: 5px;
+}
+
+.button-row {
+  width: 300px;
+  display: flex;
+  justify-content: space-around;
 }

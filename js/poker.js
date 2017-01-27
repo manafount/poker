@@ -13,14 +13,42 @@ class Poker {
     this.hand = new Hand(this.deck, this.stage);
     this.active = 0;
     this.gameState = "Game Over";
+    this.score = 100;
+    this.currentBet = 10;
 
+    this.scoreMultipliers = {
+      "sf"       : 500,
+      "4"        : 200,
+      "fh"       : 50,
+      "flush"    : 20,
+      "straight" : 10,
+      "3"        : 5,
+      "2p"       : 3,
+      "1p"       : 0,
+      "0p"       : 0
+    };
+
+    this.drawPokerLogo();
     this.cardImages = this.deck.getImages();
     this.stage.addChild(...this.cardImages);
     this.handleDrawButton = this.handleDrawButton.bind(this);
     this.shuffleComplete = this.shuffleComplete.bind(this);
   }
 
-  play() {
+  drawPokerLogo() {
+     let pokerText = new createjs.Text("Poker!", "40px Comfortaa", "white");
+     pokerText.x = 335;
+     pokerText.y = 30;
+     this.stage.addChild(pokerText);
+  }
+
+  drawScoreHelper() {
+    let container = new createjs.Container();
+    container.addChild();
+    container.x = 100;
+  }
+
+  drawResult(result) {
 
   }
 
@@ -30,14 +58,25 @@ class Poker {
       dealButton.disabled = true;
       this.deck.reset();
       this.shuffleDeck();
+      this.score -= this.currentBet;
+      this.updateScore();
     }
   }
 
+  updateScore() {
+    document.getElementById("score").innerHTML = `Current Bank: ${this.score}`;
+  }
+
   handleDrawButton(drawButton) {
-    console.log(this.gameState);
     if (this.gameState === "Drawing") {
       this.hand.getNewCards();
       this.gameState = "Game Over";
+      let result = this.hand.getHandRank();
+      this.drawResult(result);
+      console.log(this.scoreMultipliers);
+      console.log(result);
+      this.score += (this.currentBet * this.scoreMultipliers[result]);
+      this.updateScore();
     }
   }
 

@@ -5,12 +5,29 @@
     <title>Poker</title>
     <script src="js/bundle.js"></script>
     <link rel="stylesheet" href="poker.css">
+    <link href="https://fonts.googleapis.com/css?family=Comfortaa" rel="stylesheet">
   </head>
   <body>
-    <canvas id="canvas" width="800" height="500"></canvas>
+    <div class="score-helper">
+      <h4>Score Multipliers:</h4>
+      <p>Straight Flush: 500x!</p>
+      <p>Four of a Kind: 200x!</p>
+      <p>Full House: 50x!</p>
+      <p>Flush: 20x</p>
+      <p>Straight: 10x</p>
+      <p>Three of a Kind: 5x</p>
+      <p>Two Pair: 3x</p>
+      <p>One Pair or Lower: Lose</p>
+    </div>
+    <canvas id="canvas" width="800" height="500">
+    </canvas>
+    <div class="score">
+      <p id="bet">Current Bet: $10</p>
+      <p id="score">Current Bank: $100</p>
+    </div>
+    <div class="button-row">
+      <button type="button" id="deal-button">Deal</button>
+      <button type="button" id="draw-button">Draw</button>
+    </div>
   </body>
-  <div class="button-row">
-    <button type="button" id="deal-button">Deal</button>
-    <button type="button" id="draw-button">Draw</button>
-  </div>
 </html>

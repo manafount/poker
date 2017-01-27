@@ -16,10 +16,12 @@ class Hand {
     this.selectedCards = [];
     this.deck = deck;
     this.stage = stage;
+    this.handRank = null;
     this.getNewHand = this.getNewHand.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.animateDraw = this.animateDraw.bind(this);
     this.resetHandState = this.resetHandState.bind(this);
+    this.getHandRank = this.getHandRank.bind(this);
   }
 
   getNewHand() {
@@ -34,7 +36,7 @@ class Hand {
       let cardImage = this.stage.getChildByName(card.name);
       cardImages.push(cardImage);
       emptyPositions.push([cardImage.x, cardImage.y]);
-      this.deck.cards.push(card);
+      this.deck.cards.unshift(card);
     });
 
     // return the discarded cards to the bottom of the deck
@@ -57,8 +59,92 @@ class Hand {
     // draw new cards from the deck and add them to the hand
     let newCards = this.deck.draw(emptyPositions.length);
     this.hand = this.hand.concat(newCards);
+    this.handRank = this.getHandRank();
     setTimeout(() => this.animateDraw(newCards, emptyPositions), 1200);
     setTimeout(this.resetHandState, 1200);
+  }
+
+  getHandRank() {
+    let straight = this.getStraight();
+    let flush = this.getFlush();
+    let multiples = this.getMultiples();
+    console.log("flush: " + flush);
+    console.log("straight: " + straight);
+    console.log("multiples: " + multiples);
+
+    if (straight && flush) {
+      return "sf";
+    }else if (multiples === 4) {
+      return "4";
+    }else if (multiples === "fh") {
+      return "fh";
+    }else if (flush) {
+      return "flush";
+    }else if (straight) {
+      return "straight";
+    }else if (multiples === 3) {
+      return "3";
+    }else if (multiples === "2p") {
+      return "2p";
+    }else if (multiples === 2) {
+      return "1p";
+    }else{
+      return "0p";
+    }
+  }
+
+  getStraight() {
+    let lastnum = this.hand.number;
+    let straight = true;
+    this.hand.sort((a, b) => {
+      return a.number - b.number;
+    });
+    for (var i = 1; i < this.hand.length; i++) {
+      if (this.hand[i] !== (lastnum++)) straight = false;
+    }
+    return straight;
+  }
+
+  getFlush() {
+    return this.hand.every((card) => {
+      return card.suit === this.hand[0];
+    });
+  }
+
+  getMultiples() {
+    let firstpair = null;
+    let secondpair = null;
+    let max = 1;
+    this.hand.forEach((card) => {
+      let num = 0;
+      this.hand.forEach((card2) => {
+        if (card.number === card2.number) num++;
+      });
+      if (num > 1) {
+        if (firstpair && card.number !== firstpair) {
+          secondpair = card.number;
+          if (num > max) max = num;
+        }else{
+          firstpair = card.number;
+          if (num > max) max = num;
+        }
+      }
+    });
+
+    if (firstpair && secondpair) {
+      if (max > 2) {
+        return "fh";
+      }else{
+        return "2p";
+      }
+    }
+
+    switch(max) {
+      case 4: return 4;
+      case 3: return 3;
+      case 2: return 2;
+      default: return 0;
+    }
   }
 
   resetHandState() {

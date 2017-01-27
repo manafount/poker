@@ -3401,7 +3401,22 @@
 	    this.hand = new _hand2.default(this.deck, this.stage);
 	    this.active = 0;
 	    this.gameState = "Game Over";
+	    this.score = 100;
+	    this.currentBet = 10;
 	
+	    this.scoreMultipliers = {
+	      "sf": 500,
+	      "4": 200,
+	      "fh": 50,
+	      "flush": 20,
+	      "straight": 10,
+	      "3": 5,
+	      "2p": 3,
+	      "1p": 0,
+	      "0p": 0
+	    };
+	
+	    this.drawPokerLogo();
 	    this.cardImages = this.deck.getImages();
 	    (_stage = this.stage).addChild.apply(_stage, _toConsumableArray(this.cardImages));
 	    this.handleDrawButton = this.handleDrawButton.bind(this);
@@ -3409,8 +3424,23 @@
 	  }
 	
 	  _createClass(Poker, [{
-	    key: 'play',
-	    value: function play() {}
+	    key: 'drawPokerLogo',
+	    value: function drawPokerLogo() {
+	      var pokerText = new _createjsEaseljs2.default.Text("Poker!", "40px Comfortaa", "white");
+	      pokerText.x = 335;
+	      pokerText.y = 30;
+	      this.stage.addChild(pokerText);
+	    }
+	  }, {
+	    key: 'drawScoreHelper',
+	    value: function drawScoreHelper() {
+	      var container = new _createjsEaseljs2.default.Container();
+	      container.addChild();
+	      container.x = 100;
+	    }
+	  }, {
+	    key: 'drawResult',
+	    value: function drawResult(result) {}
 	  }, {
 	    key: 'handleDealButton',
 	    value: function handleDealButton(dealButton) {
@@ -3419,15 +3449,27 @@
 	        dealButton.disabled = true;
 	        this.deck.reset();
 	        this.shuffleDeck();
+	        this.score -= this.currentBet;
+	        this.updateScore();
 	      }
+	    }
+	  }, {
+	    key: 'updateScore',
+	    value: function updateScore() {
+	      document.getElementById("score").innerHTML = 'Current Bank: ' + this.score;
 	    }
 	  }, {
 	    key: 'handleDrawButton',
 	    value: function handleDrawButton(drawButton) {
-	      console.log(this.gameState);
 	      if (this.gameState === "Drawing") {
 	        this.hand.getNewCards();
 	        this.gameState = "Game Over";
+	        var result = this.hand.getHandRank();
+	        this.drawResult(result);
+	        console.log(this.scoreMultipliers);
+	        console.log(result);
+	        this.score += this.currentBet * this.scoreMultipliers[result];
+	        this.updateScore();
 	      }
 	    }
 	  }, {
@@ -3670,10 +3712,12 @@
 	    this.selectedCards = [];
 	    this.deck = deck;
 	    this.stage = stage;
+	    this.handRank = null;
 	    this.getNewHand = this.getNewHand.bind(this);
 	    this.handleClick = this.handleClick.bind(this);
 	    this.animateDraw = this.animateDraw.bind(this);
 	    this.resetHandState = this.resetHandState.bind(this);
+	    this.getHandRank = this.getHandRank.bind(this);
 	  }
 	
 	  _createClass(Hand, [{
@@ -3693,7 +3737,7 @@
 	        var cardImage = _this.stage.getChildByName(card.name);
 	        cardImages.push(cardImage);
 	        emptyPositions.push([cardImage.x, cardImage.y]);
-	        _this.deck.cards.push(card);
+	        _this.deck.cards.unshift(card);
 	      });
 	
 	      // return the discarded cards to the bottom of the deck
@@ -3712,15 +3756,111 @@
 	      // draw new cards from the deck and add them to the hand
 	      var newCards = this.deck.draw(emptyPositions.length);
 	      this.hand = this.hand.concat(newCards);
+	      this.handRank = this.getHandRank();
 	      setTimeout(function () {
 	        return _this.animateDraw(newCards, emptyPositions);
 	      }, 1200);
 	      setTimeout(this.resetHandState, 1200);
 	    }
 	  }, {
+	    key: 'getHandRank',
+	    value: function getHandRank() {
+	      var straight = this.getStraight();
+	      var flush = this.getFlush();
+	      var multiples = this.getMultiples();
+	      console.log("flush: " + flush);
+	      console.log("straight: " + straight);
+	      console.log("multiples: " + multiples);
+	
+	      if (straight && flush) {
+	        return "sf";
+	      } else if (multiples === 4) {
+	        return "4";
+	      } else if (multiples === "fh") {
+	        return "fh";
+	      } else if (flush) {
+	        return "flush";
+	      } else if (straight) {
+	        return "straight";
+	      } else if (multiples === 3) {
+	        return "3";
+	      } else if (multiples === "2p") {
+	        return "2p";
+	      } else if (multiples === 2) {
+	        return "1p";
+	      } else {
+	        return "0p";
+	      }
+	    }
+	  }, {
+	    key: 'getStraight',
+	    value: function getStraight() {
+	      var lastnum = this.hand.number;
+	      var straight = true;
+	      this.hand.sort(function (a, b) {
+	        return a.number - b.number;
+	      });
+	      for (var i = 1; i < this.hand.length; i++) {
+	        if (this.hand[i] !== lastnum++) straight = false;
+	      }
+	      return straight;
+	    }
+	  }, {
+	    key: 'getFlush',
+	    value: function getFlush() {
+	      var _this2 = this;
+	
+	      return this.hand.every(function (card) {
+	        return card.suit === _this2.hand[0];
+	      });
+	    }
+	  }, {
+	    key: 'getMultiples',
+	    value: function getMultiples() {
+	      var _this3 = this;
+	
+	      var firstpair = null;
+	      var secondpair = null;
+	      var max = 1;
+	      this.hand.forEach(function (card) {
+	        var num = 0;
+	        _this3.hand.forEach(function (card2) {
+	          if (card.number === card2.number) num++;
+	        });
+	        if (num > 1) {
+	          if (firstpair && card.number !== firstpair) {
+	            secondpair = card.number;
+	            if (num > max) max = num;
+	          } else {
+	            firstpair = card.number;
+	            if (num > max) max = num;
+	          }
+	        }
+	      });
+	
+	      if (firstpair && secondpair) {
+	        if (max > 2) {
+	          return "fh";
+	        } else {
+	          return "2p";
+	        }
+	      }
+	
+	      switch (max) {
+	        case 4:
+	          return 4;
+	        case 3:
+	          return 3;
+	        case 2:
+	          return 2;
+	        default:
+	          return 0;
+	      }
+	    }
+	  }, {
 	    key: 'resetHandState',
 	    value: function resetHandState() {
-	      var _this2 = this;
+	      var _this4 = this;
 	
 	      this.selectedCards = [];
 	      var dealButton = document.getElementById("deal-button");
@@ -3730,8 +3870,8 @@
 	      dealButton.disabled = false;
 	
 	      this.hand.forEach(function (card) {
-	        _this2.deck.cards.push(card);
-	        _this2.stage.getChildByName(card.name).removeEventListener("click", _this2.handleClick);
+	        _this4.deck.cards.push(card);
+	        _this4.stage.getChildByName(card.name).removeEventListener("click", _this4.handleClick);
 	      });
 	    }
 	  }, {
@@ -3760,13 +3900,13 @@
 	  }, {
 	    key: 'animateDraw',
 	    value: function animateDraw(cards) {
-	      var _this3 = this;
+	      var _this5 = this;
 	
 	      var positions = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.trayPositions;
 	
 	      var cardImages = [];
 	      cards.forEach(function (card) {
-	        var cardImage = _this3.stage.getChildByName(card.name);
+	        var cardImage = _this5.stage.getChildByName(card.name);
 	        cardImages.push(cardImage);
 	      });
 	      cardImages.forEach(function (cardImage, index) {
@@ -3775,7 +3915,7 @@
 	          y: positions[index][1],
 	          scaleX: 0
 	        }, 700).call(cards[index].flip).to({ scaleX: 1 }, 200);
-	        cardImage.addEventListener("click", _this3.handleClick);
+	        cardImage.addEventListener("click", _this5.handleClick);
 	      });
 	    }
 	  }]);
