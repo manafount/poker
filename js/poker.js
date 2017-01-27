@@ -25,19 +25,23 @@ class Poker {
   }
 
   handleDealButton(dealButton) {
-    console.log(this.gameState);
     if (this.gameState === "Game Over") {
+      this.gameState = "Drawing";
       dealButton.disabled = true;
       this.shuffleDeck();
     }
   }
 
   handleDrawButton(drawButton) {
+    console.log(this.gameState);
+    if (this.gameState === "Drawing") {
+      this.hand.getNewCards();
+      this.gameState = "Game Over";
+    }
   }
 
   shuffleDeck() {
     this.active = this.cardImages.length;
-    console.log(this.active);
     this.cardImages.forEach((card) => {
       createjs.Tween.get(card)
         .to({ x: (Math.random() * (this.maxX - 100)),

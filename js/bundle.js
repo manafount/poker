@@ -3414,22 +3414,27 @@
 	  }, {
 	    key: 'handleDealButton',
 	    value: function handleDealButton(dealButton) {
-	      console.log(this.gameState);
 	      if (this.gameState === "Game Over") {
+	        this.gameState = "Drawing";
 	        dealButton.disabled = true;
 	        this.shuffleDeck();
 	      }
 	    }
 	  }, {
 	    key: 'handleDrawButton',
-	    value: function handleDrawButton(drawButton) {}
+	    value: function handleDrawButton(drawButton) {
+	      console.log(this.gameState);
+	      if (this.gameState === "Drawing") {
+	        this.hand.getNewCards();
+	        this.gameState = "Game Over";
+	      }
+	    }
 	  }, {
 	    key: 'shuffleDeck',
 	    value: function shuffleDeck() {
 	      var _this = this;
 	
 	      this.active = this.cardImages.length;
-	      console.log(this.active);
 	      this.cardImages.forEach(function (card) {
 	        _createjsEaseljs2.default.Tween.get(card).to({ x: Math.random() * (_this.maxX - 100),
 	          y: Math.random() * (_this.maxY - 200) }, 700).to({ x: Math.random() * (_this.maxX - 100),
@@ -3666,6 +3671,7 @@
 	    this.stage = stage;
 	    this.getNewHand = this.getNewHand.bind(this);
 	    this.handleClick = this.handleClick.bind(this);
+	    this.animateDraw = this.animateDraw.bind(this);
 	  }
 	
 	  _createClass(Hand, [{
@@ -3674,6 +3680,39 @@
 	      this.hand = this.deck.draw(5);
 	      console.log(this.hand);
 	      this.animateDraw(this.hand);
+	    }
+	  }, {
+	    key: 'getNewCards',
+	    value: function getNewCards() {
+	      var _this = this;
+	
+	      var emptyPositions = [];
+	      var cardImages = [];
+	      this.selectedCards.forEach(function (card) {
+	        var cardImage = _this.stage.getChildByName(card.name);
+	        cardImages.push(cardImage);
+	        emptyPositions.push([cardImage.x, cardImage.y]);
+	      });
+	      // return the discarded cards to the bottom of the deck
+	      cardImages.forEach(function (cardImage, index) {
+	        _createjsEaseljs2.default.Tween.get(cardImage).wait(index * 200).to({
+	          x: 350, y: 100,
+	          scaleX: 0,
+	          regY: 0
+	        }, 700).call(_this.selectedCards[index].flip).to({ scaleX: 1 }, 200);
+	        cardImage.removeEventListener("click", _this.handleClick);
+	      });
+	      this.hand = this.hand.filter(function (card) {
+	        return !_this.selectedCards.includes(card);
+	      });
+	
+	      // draw new cards from the deck and add them to the hand
+	      var newCards = this.deck.draw(emptyPositions.length);
+	      setTimeout(function () {
+	        return _this.animateDraw(newCards, emptyPositions);
+	      }, 1200);
+	      console.log(newCards);
+	      console.log(emptyPositions);
 	    }
 	  }, {
 	    key: 'handleClick',
@@ -3701,20 +3740,22 @@
 	  }, {
 	    key: 'animateDraw',
 	    value: function animateDraw(cards) {
-	      var _this = this;
+	      var _this2 = this;
+	
+	      var positions = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.trayPositions;
 	
 	      var cardImages = [];
 	      cards.forEach(function (card) {
-	        var cardImage = _this.stage.getChildByName(card.name);
+	        var cardImage = _this2.stage.getChildByName(card.name);
 	        cardImages.push(cardImage);
 	      });
 	      cardImages.forEach(function (cardImage, index) {
 	        _createjsEaseljs2.default.Tween.get(cardImage).wait(index * 200).to({
-	          x: _this.trayPositions[index][0],
-	          y: _this.trayPositions[index][1],
+	          x: positions[index][0],
+	          y: positions[index][1],
 	          scaleX: 0
 	        }, 700).call(cards[index].flip).to({ scaleX: 1 }, 200);
-	        cardImage.addEventListener("click", _this.handleClick);
+	        cardImage.addEventListener("click", _this2.handleClick);
 	      });
 	    }
 	  }]);
